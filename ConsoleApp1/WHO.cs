@@ -460,6 +460,7 @@ namespace ConsoleApp1
 
         public void WHOActionLogic()
         {
+            // get SimStatus
             GetSimStatus simStatus = GetSimStatusRequest();
             this.budget = simStatus.budget;
             if (simStatus.isWhoTurn)
@@ -476,6 +477,7 @@ namespace ConsoleApp1
                 SendActionRequest();
                 actions.Clear();
 
+                // invest in vaccine
                 if(this.budget > Constant.VACCINE_INVEST_HIGH)
                 {
                     InvestVac(id, Constant.VACCINE_INVEST_HIGH);
@@ -491,11 +493,29 @@ namespace ConsoleApp1
                 SendActionRequest();
                 actions.Clear();
 
+                // take loan
+                if(this.budget < Constant.BUDGET_THRESHOLD_2 && this.budget > Constant.BUDGET_THRESHOLD_1)
+                {
+                    Loan(id, Constant.LOAN_GAIN_LOW);
+                    id++;
+                    this.actionIds.Add(id);
+                }
+                else if (this.budget < Constant.BUDGET_THRESHOLD_1)
+                {
+                    Loan(id, Constant.LOAN_GAIN_HIGH);
+                    id++;
+                    this.actionIds.Add(id);
+                }
+
+                SendActionRequest();
+                actions.Clear();
 
 
+                // get test result
                 TestResultRequest resultRequest = searchTestResult(this.locations);
                 List<TestResultElement> results = SendTestResultRequest(resultRequest);
 
+                // lockDown logic
                 if (results.Count > 0)
                 {
 
@@ -511,6 +531,9 @@ namespace ConsoleApp1
                             this.actionIds.Add(id);
                             id++;
                             MovementRestriction(id, element.location, Constant.RESTRICT_DISTANCE);
+                            this.actionIds.Add(id);
+                            id++;
+                            HealthDrive(id, element.location);
                             this.actionIds.Add(id);
                             id++;
 
@@ -535,6 +558,9 @@ namespace ConsoleApp1
                             CloseRecreational(id, element.location);
                             this.actionIds.Add(id);
                             id++;
+                            InformationPress(id, element.location, Constant.INFO_PRESS_INVEST_HIGH);
+                            this.actionIds.Add(id);
+                            id++;
                         }
                         else if(infectedRate >= Constant.INFECTED_RATE_THRESHOLD_2)
                         {
@@ -556,6 +582,9 @@ namespace ConsoleApp1
                             CloseRecreational(id, element.location);
                             this.actionIds.Add(id);
                             id++;
+                            InformationPress(id, element.location, Constant.INFO_PRESS_INVEST_HIGH);
+                            this.actionIds.Add(id);
+                            id++;
                             CloseBoder(id, element.location);
                             this.actionIds.Add(id);
                             id++;
@@ -569,6 +598,7 @@ namespace ConsoleApp1
                 SendActionRequest();
                 actions.Clear();
 
+                //end WHO turn
                 UpdateSimStatus();
             }
 
