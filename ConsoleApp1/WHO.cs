@@ -54,6 +54,7 @@ namespace ConsoleApp1
     }
 
 
+
     [DataContract]
     class TestResultRequest
     {
@@ -126,239 +127,299 @@ namespace ConsoleApp1
     class WHO
     {
         int budget = 0;
+        private uint staticID = 20000;
         List<uint> actionIds = new List<uint>();
-        
         List<GenericAction> actions = new List<GenericAction>();
         List<List<string>> locations = new List<List<string>>();
+        Dictionary<List<string>, uint> locationId;       
         public WHO(List<List<string>> locations)
         {
+            uint id = 100;
             this.locations = locations;
+            foreach(List<string> location in locations)
+            {
+                locationId.Add(location, id);
+                id += 100;
+            }
         }
 
         public void TestAndIsolation(uint id, List<string> location, int testQuality, int quarantinePeriod, int quantity, bool symptomaticOnly)
         {
-            var testAction = new GenericAction();
-            testAction.id = id;
-            testAction.mode = "create";
-            testAction.action = "testAndIsolation";
+            if (!actionIds.Contains(id))
+            {
+                var testAction = new GenericAction();
+                testAction.id = id;
+                testAction.mode = "create";
+                testAction.action = "testAndIsolation";
 
-            testAction.parameters = new GenericActionParameters();
-            testAction.parameters.testQuality = testQuality;
-            testAction.parameters.quarantinePeriod = quarantinePeriod;
-            testAction.parameters.quantity = quantity;
-            testAction.parameters.location = location;
-            testAction.parameters.symptomaticOnly = symptomaticOnly;
-
-            actions.Add(testAction);
+                testAction.parameters = new GenericActionParameters();
+                testAction.parameters.testQuality = testQuality;
+                testAction.parameters.quarantinePeriod = quarantinePeriod;
+                testAction.parameters.quantity = quantity;
+                testAction.parameters.location = location;
+                testAction.parameters.symptomaticOnly = symptomaticOnly;
+                actionIds.Add(id);
+                actions.Add(testAction);
+            }
         }
 
         public void StayAtHome(uint id, List<string> location)
         {
-            var StayAtHome = new GenericAction();
-            StayAtHome.id = id;
-            StayAtHome.mode = "create";
-            StayAtHome.action = "stayAtHome";
+            if (!actionIds.Contains(id + 1))
+            {
+                var StayAtHome = new GenericAction();
+                StayAtHome.id = id + 1;
+                StayAtHome.mode = "create";
+                StayAtHome.action = "stayAtHome";
 
-            StayAtHome.parameters = new GenericActionParameters();
-            StayAtHome.parameters.location = location;
-
-            actions.Add(StayAtHome);
+                StayAtHome.parameters = new GenericActionParameters();
+                StayAtHome.parameters.location = location;
+                actionIds.Add(id + 1);
+                actions.Add(StayAtHome);
+            }
         }
 
         public void CloseSchool(uint id, List<string> location)
         {
-            var closeSchool = new GenericAction();
-            closeSchool.id = id;
-            closeSchool.mode = "create";
-            closeSchool.action = "closeSchools";
+            if (!actionIds.Contains(id + 2))
+            {
+                var closeSchool = new GenericAction();
+                closeSchool.id = id + 2;
+                closeSchool.mode = "create";
+                closeSchool.action = "closeSchools";
 
-            closeSchool.parameters = new GenericActionParameters();
-            closeSchool.parameters.location = location;
-
-            actions.Add(closeSchool);
+                closeSchool.parameters = new GenericActionParameters();
+                closeSchool.parameters.location = location;
+                actionIds.Add(id + 2);
+                actions.Add(closeSchool);
+            }
         }
 
         public void CloseRecreational(uint id, List<string> location)
         {
-            var closeRecreational = new GenericAction();
-            closeRecreational.id = id;
-            closeRecreational.mode = "create";
-            closeRecreational.action = "closeSchools";
+            if (!actionIds.Contains(id + 3))
+            {
+                var closeRecreational = new GenericAction();
+                closeRecreational.id = id + 3;
+                closeRecreational.mode = "create";
+                closeRecreational.action = "closeSchools";
 
-            closeRecreational.parameters = new GenericActionParameters();
-            closeRecreational.parameters.location = location;
-
-            actions.Add(closeRecreational);
+                closeRecreational.parameters = new GenericActionParameters();
+                closeRecreational.parameters.location = location;
+                actionIds.Add(id + 3);
+                actions.Add(closeRecreational);
+            }
         }
 
         public void Shielding(uint id, List<string> location, bool vulnerablePeople, int ageThreshold)
         {
-            var shielding = new GenericAction();
-            shielding.id = id;
-            shielding.mode = "create";
-            shielding.action = "shieldingProgram";
+            if (!actionIds.Contains(id + 4))
+            {
+                var shielding = new GenericAction();
+                shielding.id = id + 4;
+                shielding.mode = "create";
+                shielding.action = "shieldingProgram";
 
-            shielding.parameters = new GenericActionParameters();
-            shielding.parameters.location = location;
-            shielding.parameters.vulnerablePeople = vulnerablePeople;
-            shielding.parameters.ageThreshold = ageThreshold;
-
-            actions.Add(shielding);
+                shielding.parameters = new GenericActionParameters();
+                shielding.parameters.location = location;
+                shielding.parameters.vulnerablePeople = vulnerablePeople;
+                shielding.parameters.ageThreshold = ageThreshold;
+                actionIds.Add(id + 4);
+                actions.Add(shielding);
+            }
         }
 
         public void MovementRestriction(uint id, List<string> location, int distance)
         {
-            var movementRistriction = new GenericAction();
-            movementRistriction.id = id;
-            movementRistriction.mode = "create";
-            movementRistriction.action = "movementRestrictions";
+            if (!actionIds.Contains(id + 5))
+            {
+                var movementRistriction = new GenericAction();
+                movementRistriction.id = id + 5;
+                movementRistriction.mode = "create";
+                movementRistriction.action = "movementRestrictions";
 
-            movementRistriction.parameters = new GenericActionParameters();
-            movementRistriction.parameters.location = location;
-            movementRistriction.parameters.distance = distance;
-
-            actions.Add(movementRistriction);
+                movementRistriction.parameters = new GenericActionParameters();
+                movementRistriction.parameters.location = location;
+                movementRistriction.parameters.distance = distance;
+                actionIds.Add(id + 5);
+                actions.Add(movementRistriction);
+            }
         }
 
         public void CloseBoder(uint id, List<string> location)
         {
-            var closeBoder = new GenericAction();
-            closeBoder.id = id;
-            closeBoder.mode = "create";
-            closeBoder.action = "closeBorders";
+            if (!actionIds.Contains(id + 6))
+            {
+                var closeBoder = new GenericAction();
+                closeBoder.id = id + 6;
+                closeBoder.mode = "create";
+                closeBoder.action = "closeBorders";
 
-            closeBoder.parameters = new GenericActionParameters();
-            closeBoder.parameters.location = location;
-
-            actions.Add(closeBoder);
+                closeBoder.parameters = new GenericActionParameters();
+                closeBoder.parameters.location = location;
+                actionIds.Add(id + 6);
+                actions.Add(closeBoder);
+            }
         }
 
         public void InvestVac(uint id, int investAmount)
         {
-            var investVac = new GenericAction();
-            investVac.id = id;
-            investVac.mode = "create";
-            investVac.action = "investInVaccine";
+            if (!actionIds.Contains(id + 7))
+            {
+                var investVac = new GenericAction();
+                investVac.id = id + 7;
+                investVac.mode = "create";
+                investVac.action = "investInVaccine";
 
-            investVac.parameters = new GenericActionParameters();
-            investVac.parameters.amountInvested = investAmount;
-
-            actions.Add(investVac);
+                investVac.parameters = new GenericActionParameters();
+                investVac.parameters.amountInvested = investAmount;
+                actionIds.Add(id + 7);
+                actions.Add(investVac);
+            }
         }
 
         public void Furlough(uint id,List<string> location, int amountInvested)
         {
-            var furlough = new GenericAction();
-            furlough.id = id;
-            furlough.mode = "create";
-            furlough.action = "furlough";
+            if (!actionIds.Contains(id + 8))
+            {
 
-            furlough.parameters = new GenericActionParameters();
-            furlough.parameters.amountInvested = amountInvested;
-            furlough.parameters.location = location;
 
-            actions.Add(furlough);
+                var furlough = new GenericAction();
+                furlough.id = id + 8;
+                furlough.mode = "create";
+                furlough.action = "furlough";
+
+                furlough.parameters = new GenericActionParameters();
+                furlough.parameters.amountInvested = amountInvested;
+                furlough.parameters.location = location;
+                actionIds.Add(id + 8);
+                actions.Add(furlough);
+            }
         }
 
         public void InformationPress(uint id, List<string> location, int amountInvested)
         {
-            var infoPress = new GenericAction();
-            infoPress.id = id;
-            infoPress.mode = "create";
-            infoPress.action = "infoPressRelease";
+            if (!actionIds.Contains(id + 9))
+            {
+                var infoPress = new GenericAction();
+                infoPress.id = id + 9;
+                infoPress.mode = "create";
+                infoPress.action = "infoPressRelease";
 
-            infoPress.parameters = new GenericActionParameters();
-            infoPress.parameters.amountInvested = amountInvested;
-            infoPress.parameters.location = location;
-
-            actions.Add(infoPress);
+                infoPress.parameters = new GenericActionParameters();
+                infoPress.parameters.amountInvested = amountInvested;
+                infoPress.parameters.location = location;
+                actionIds.Add(id + 9);
+                actions.Add(infoPress);
+            }
         }
 
         public void Loan(uint id, int amountLoan)
         {
-            var loan = new GenericAction();
-            loan.id = id;
-            loan.mode = "create";
-            loan.action = "loan";
+            if (!actionIds.Contains(id + 10))
+            {
+                var loan = new GenericAction();
+                loan.id = id + 10;
+                loan.mode = "create";
+                loan.action = "loan";
 
-            loan.parameters = new GenericActionParameters();
-            loan.parameters.amountLoaned = amountLoan;
-
-            actions.Add(loan);
+                loan.parameters = new GenericActionParameters();
+                loan.parameters.amountLoaned = amountLoan;
+                actionIds.Add(id + 10);
+                actions.Add(loan);
+            }
         }
 
         public void MaskMandate(uint id, List<string> location, int[] maskProvisionLevel)
         {
-            var maskMandate = new GenericAction();
-            maskMandate.id = id;
-            maskMandate.mode = "create";
-            maskMandate.action = "maskMandate";
+            if (!actionIds.Contains(id + 11))
+            {
+                var maskMandate = new GenericAction();
+                maskMandate.id = id + 11;
+                maskMandate.mode = "create";
+                maskMandate.action = "maskMandate";
 
-            maskMandate.parameters = new GenericActionParameters();
-            maskMandate.parameters.location = location;
-            maskMandate.parameters.maskProvisionLevel = maskProvisionLevel;
-
-            actions.Add(maskMandate);
+                maskMandate.parameters = new GenericActionParameters();
+                maskMandate.parameters.location = location;
+                maskMandate.parameters.maskProvisionLevel = maskProvisionLevel;
+                actionIds.Add(id + 11);
+                actions.Add(maskMandate);
+            }
         }
 
         public void HealthDrive(uint id, List<string> location)
         {
-            var healthDrive = new GenericAction();
-            healthDrive.id = id;
-            healthDrive.mode = "create";
-            healthDrive.action = "healthDrive";
+            if (!actionIds.Contains(id + 12))
+            {
+                var healthDrive = new GenericAction();
+                healthDrive.id = id + 12;
+                healthDrive.mode = "create";
+                healthDrive.action = "healthDrive";
 
-            healthDrive.parameters = new GenericActionParameters();
-            healthDrive.parameters.location = location;
-
-            actions.Add(healthDrive);
+                healthDrive.parameters = new GenericActionParameters();
+                healthDrive.parameters.location = location;
+                actionIds.Add(id + 12);
+                actions.Add(healthDrive);
+            }
         }
 
         public void InvestHealthService(uint id, int amountInvested)
         {
-            var investHealthService = new GenericAction();
-            investHealthService.id = id;
-            investHealthService.mode = "create";
-            investHealthService.action = "investInHealthServices ";
+            if (!actionIds.Contains(id + 13))
+            {
+                var investHealthService = new GenericAction();
+                investHealthService.id = id + 13;
+                investHealthService.mode = "create";
+                investHealthService.action = "investInHealthServices ";
 
-            investHealthService.parameters = new GenericActionParameters();
-            investHealthService.parameters.amountInvested = amountInvested;
-
-            actions.Add(investHealthService);
+                investHealthService.parameters = new GenericActionParameters();
+                investHealthService.parameters.amountInvested = amountInvested;
+                actionIds.Add(id + 13);
+                actions.Add(investHealthService);
+            }
         }
 
         public void SocialDistancing(uint id, List<string> location, int distance)
         {
-            var socialDistance = new GenericAction();
-            socialDistance.id = id;
-            socialDistance.mode = "create";
-            socialDistance.action = "socialDistancingMandate ";
+            if (!actionIds.Contains(id + 14))
+            {
+                var socialDistance = new GenericAction();
+                socialDistance.id = id + 14;
+                socialDistance.mode = "create";
+                socialDistance.action = "socialDistancingMandate ";
 
-            socialDistance.parameters = new GenericActionParameters();
-            socialDistance.parameters.location = location;
-            socialDistance.parameters.distance = distance;
-
-            actions.Add(socialDistance);
+                socialDistance.parameters = new GenericActionParameters();
+                socialDistance.parameters.location = location;
+                socialDistance.parameters.distance = distance;
+                actionIds.Add(id + 14);
+                actions.Add(socialDistance);
+            }
         }
 
         public void Curfew(uint id, List<string> location)
         {
-            var socialDistance = new GenericAction();
-            socialDistance.id = id;
-            socialDistance.mode = "create";
-            socialDistance.action = "curfew ";
+            if (!actionIds.Contains(id + 15))
+            {
+                var socialDistance = new GenericAction();
+                socialDistance.id = id + 15;
+                socialDistance.mode = "create";
+                socialDistance.action = "curfew ";
 
-            socialDistance.parameters = new GenericActionParameters();
-            socialDistance.parameters.location = location;
-
-            actions.Add(socialDistance);
+                socialDistance.parameters = new GenericActionParameters();
+                socialDistance.parameters.location = location;
+                actionIds.Add(id + 15);
+                actions.Add(socialDistance);
+            }
         }
 
         public void Delete(uint id)
         {
-            var delete = new GenericAction();
-            delete.id = id;
-            delete.mode = "delete";
+            if (actionIds.Contains(id))
+            {
+                var delete = new GenericAction();
+                delete.id = id;
+                delete.mode = "delete";
+            }
         }
 
         public TestResultRequest searchTestResult(List<List<string>> location)
@@ -465,14 +526,12 @@ namespace ConsoleApp1
             this.budget = simStatus.budget;
             if (simStatus.isWhoTurn)
             {
-
                 // testing
-                uint id = 0;
+                //uint id = 0;
                 foreach (List<string> location in this.locations)
                 {
+                    uint id = locationId[location];
                     TestAndIsolation(id, location, 0, 21, 100, false);
-                    this.actionIds.Add(id);
-                    id++;
                 }
                 SendActionRequest();
                 actions.Clear();
@@ -480,15 +539,13 @@ namespace ConsoleApp1
                 // invest in vaccine
                 if(this.budget > Constant.VACCINE_INVEST_HIGH)
                 {
-                    InvestVac(id, Constant.VACCINE_INVEST_HIGH);
-                    id++;
-                    this.actionIds.Add(id);
+                    InvestVac(staticID, Constant.VACCINE_INVEST_HIGH);
+                    
                 }
                 else if (this.budget > Constant.VACCINE_INVEST_LOW)
                 {
-                    InvestVac(id, Constant.VACCINE_INVEST_LOW);
-                    id++;
-                    this.actionIds.Add(id);
+                    InvestVac(staticID, Constant.VACCINE_INVEST_LOW);
+                    
                 }
                 SendActionRequest();
                 actions.Clear();
@@ -496,15 +553,13 @@ namespace ConsoleApp1
                 // take loan
                 if(this.budget < Constant.BUDGET_THRESHOLD_2 && this.budget > Constant.BUDGET_THRESHOLD_1)
                 {
-                    Loan(id, Constant.LOAN_GAIN_LOW);
-                    id++;
-                    this.actionIds.Add(id);
+                    Loan(staticID, Constant.LOAN_GAIN_LOW);
+                    
                 }
                 else if (this.budget < Constant.BUDGET_THRESHOLD_1)
                 {
-                    Loan(id, Constant.LOAN_GAIN_HIGH);
-                    id++;
-                    this.actionIds.Add(id);
+                    Loan(staticID, Constant.LOAN_GAIN_HIGH);
+                    
                 }
 
                 SendActionRequest();
@@ -522,75 +577,77 @@ namespace ConsoleApp1
                     foreach (TestResultElement element in results)
                     {
                         double infectedRate = (double)element.positive / (double)element.total;
+                        uint id = locationId[element.location];
                         if (0 <= infectedRate && infectedRate <= Constant.INFECTED_RATE_THRESHOLD_1)
                         {
+                            
                             Shielding(id, element.location, true, 60);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             SocialDistancing(id, element.location, Constant.RESTRICT_DISTANCE);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             MovementRestriction(id, element.location, Constant.RESTRICT_DISTANCE);
-                            this.actionIds.Add(id);
-                            id++;
-                            HealthDrive(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+
+                            InformationPress(id, element.location, Constant.INFO_PRESS_INVEST_HIGH);
+
+                            //delete stay at home, close school, close recreational
+                            Delete(id + 1);
+                            Delete(id + 2);
+                            Delete(id + 3);
+
+                            //delete health drive
+                            Delete(id + 12);
+                            //delete close boder
+                            Delete(id + 6);
+                            //delete curfew
+                            Delete(id + 15);
 
                         }
                         else if (Constant.INFECTED_RATE_THRESHOLD_1 <= infectedRate && infectedRate <= Constant.INFECTED_RATE_THRESHOLD_2)
                         {
                             Shielding(id, element.location, true, 60);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             SocialDistancing(id, element.location, Constant.RESTRICT_DISTANCE);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             MovementRestriction(id, element.location, Constant.RESTRICT_DISTANCE);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             StayAtHome(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             CloseSchool(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             CloseRecreational(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             InformationPress(id, element.location, Constant.INFO_PRESS_INVEST_HIGH);
-                            this.actionIds.Add(id);
-                            id++;
+
+                            HealthDrive(id, element.location);
+
+                            //delete close boder
+                            Delete(id + 6);
+                            //delete curfew
+                            Delete(id + 15);
+                            
                         }
                         else if(infectedRate >= Constant.INFECTED_RATE_THRESHOLD_2)
                         {
                             Shielding(id, element.location, true, 60);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             SocialDistancing(id, element.location, Constant.RESTRICT_DISTANCE);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             MovementRestriction(id, element.location, Constant.RESTRICT_DISTANCE);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             StayAtHome(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             CloseSchool(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             CloseRecreational(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             InformationPress(id, element.location, Constant.INFO_PRESS_INVEST_HIGH);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             CloseBoder(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+                            
                             Curfew(id, element.location);
-                            this.actionIds.Add(id);
-                            id++;
+
+                            HealthDrive(id, element.location);
+
                         }
                     }
                 }
