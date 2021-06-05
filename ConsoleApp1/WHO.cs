@@ -533,8 +533,12 @@ namespace ConsoleApp1
                     uint id = locationId[location];
                     TestAndIsolation(id, location, 0, 21, 100, false);
                 }
-                SendActionRequest();
-                actions.Clear();
+                if (actions.Count > 0)
+                {
+                    SendActionRequest();
+                    actions.Clear();
+                }
+                
 
                 // invest in vaccine
                 if(this.budget > Constant.VACCINE_INVEST_HIGH)
@@ -547,11 +551,14 @@ namespace ConsoleApp1
                     InvestVac(staticID, Constant.VACCINE_INVEST_LOW);
                     
                 }
-                SendActionRequest();
-                actions.Clear();
+                if (actions.Count > 0)
+                {
+                    SendActionRequest();
+                    actions.Clear();
+                }
 
                 // take loan
-                if(this.budget < Constant.BUDGET_THRESHOLD_2 && this.budget > Constant.BUDGET_THRESHOLD_1)
+                if (this.budget < Constant.BUDGET_THRESHOLD_2 && this.budget > Constant.BUDGET_THRESHOLD_1)
                 {
                     Loan(staticID, Constant.LOAN_GAIN_LOW);
                     
@@ -559,11 +566,18 @@ namespace ConsoleApp1
                 else if (this.budget < Constant.BUDGET_THRESHOLD_1)
                 {
                     Loan(staticID, Constant.LOAN_GAIN_HIGH);
-                    
+
+                }
+                else
+                {
+                    Delete(staticID + 10);
                 }
 
-                SendActionRequest();
-                actions.Clear();
+                if (actions.Count > 0)
+                {
+                    SendActionRequest();
+                    actions.Clear();
+                }
 
 
                 // get test result
@@ -652,8 +666,11 @@ namespace ConsoleApp1
                     }
                 }
 
-                SendActionRequest();
-                actions.Clear();
+                if (actions.Count > 0)
+                {
+                    SendActionRequest();
+                    actions.Clear();
+                }
 
                 //end WHO turn
                 UpdateSimStatus();
