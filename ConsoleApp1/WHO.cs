@@ -131,7 +131,7 @@ namespace ConsoleApp1
         List<uint> actionIds = new List<uint>();
         List<GenericAction> actions = new List<GenericAction>();
         List<List<string>> locations = new List<List<string>>();
-        Dictionary<List<string>, uint> locationId;       
+        Dictionary<List<string>, uint> locationId = new Dictionary<List<string>, uint>();       
         public WHO(List<List<string>> locations)
         {
             uint id = 100;
