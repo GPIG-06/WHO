@@ -59,7 +59,7 @@ namespace ConsoleApp1
     class TestResultRequest
     {
         [DataMember]
-        public List<List<string>> location;
+        public List<List<string>> locations;
     }
 
 
@@ -96,7 +96,7 @@ namespace ConsoleApp1
     class SearchTotalRequest
     {
         [DataMember]
-        public List<List<string>> location;
+        public List<List<string>> locations;
     }
 
     [DataContract]
@@ -131,14 +131,14 @@ namespace ConsoleApp1
         List<uint> actionIds = new List<uint>();
         List<GenericAction> actions = new List<GenericAction>();
         List<List<string>> locations = new List<List<string>>();
-        Dictionary<List<string>, uint> locationId = new Dictionary<List<string>, uint>();       
+        Dictionary<string, uint> locationId = new Dictionary<string, uint>();       
         public WHO(List<List<string>> locations)
         {
             uint id = 100;
             this.locations = locations;
             foreach(List<string> location in locations)
             {
-                locationId.Add(location, id);
+                locationId.Add(String.Join("", location), id);
                 id += 100;
             }
         }
@@ -419,13 +419,14 @@ namespace ConsoleApp1
                 var delete = new GenericAction();
                 delete.id = id;
                 delete.mode = "delete";
+                actionIds.Remove(id);
             }
         }
 
         public TestResultRequest searchTestResult(List<List<string>> location)
         {
             var testResult = new TestResultRequest();
-            testResult.location = location;
+            testResult.locations = location;
 
             return testResult;
         }
@@ -441,7 +442,7 @@ namespace ConsoleApp1
             // Convert the actions list to JSON and add it to the request
             var serializer = new DataContractJsonSerializer(typeof(UpdateSimStatus));
             serializer.WriteObject(request.GetRequestStream(), update);
-            request.GetResponse();
+            request.GetResponse().Close();
 
         }
 
@@ -455,7 +456,7 @@ namespace ConsoleApp1
             serializer.WriteObject(request.GetRequestStream(), actions);
 
             // Send the request and await a response
-            request.GetResponse();
+            request.GetResponse().Close();
             actions.Clear();
         }
 
@@ -472,6 +473,7 @@ namespace ConsoleApp1
             var respondStream = respond.GetResponseStream();
             var parser = new DataContractJsonSerializer(typeof(List<TestResultElement>));
             List<TestResultElement> results = parser.ReadObject(respondStream) as List<TestResultElement>;
+            respond.Close();
 
             return results;
             // what I get from GetRespond()
@@ -486,6 +488,7 @@ namespace ConsoleApp1
             var respondStream = respond.GetResponseStream();
             var parser = new DataContractJsonSerializer(typeof(GetSimStatus));
             GetSimStatus simStatus = parser.ReadObject(respondStream) as GetSimStatus;
+            respond.Close();
 
             return simStatus;
         }
@@ -493,7 +496,7 @@ namespace ConsoleApp1
         public SearchTotalRequest SearchTotalRequest(List<List<string>> location)
         {
             var searchTotal = new SearchTotalRequest();
-            searchTotal.location = location;
+            searchTotal.locations = location;
 
             return searchTotal;
         }
@@ -509,6 +512,7 @@ namespace ConsoleApp1
             var respondStream = respond.GetResponseStream();
             var parser = new DataContractJsonSerializer(typeof(List<SearchTotalElement>));
             List<SearchTotalElement> totalElements = parser.ReadObject(respondStream) as List<SearchTotalElement>;
+            respond.Close();
 
             foreach(SearchTotalElement element in totalElements)
             {
@@ -530,7 +534,7 @@ namespace ConsoleApp1
                 //uint id = 0;
                 foreach (List<string> location in this.locations)
                 {
-                    uint id = locationId[location];
+                    uint id = locationId[String.Join("", location)];
                     TestAndIsolation(id, location, 0, 21, 100, false);
                 }
                 if (actions.Count > 0)
@@ -563,7 +567,7 @@ namespace ConsoleApp1
                     Loan(staticID, Constant.LOAN_GAIN_LOW);
                     
                 }
-                else if (this.budget < Constant.BUDGET_THRESHOLD_1)
+                else if (this.budget <= Constant.BUDGET_THRESHOLD_1)
                 {
                     Loan(staticID, Constant.LOAN_GAIN_HIGH);
 
@@ -591,7 +595,7 @@ namespace ConsoleApp1
                     foreach (TestResultElement element in results)
                     {
                         double infectedRate = (double)element.positive / (double)element.total;
-                        uint id = locationId[element.location];
+                        uint id = locationId[String.Join("", element.location)];
                         if (0 <= infectedRate && infectedRate <= Constant.INFECTED_RATE_THRESHOLD_1)
                         {
                             
