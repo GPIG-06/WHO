@@ -22,6 +22,21 @@ namespace ConsoleApp1
         public const double INFECTED_RATE_THRESHOLD_1 = 0.02;
         public const double INFECTED_RATE_THRESHOLD_2 = 0.05;
         public const int RESTRICT_DISTANCE = 10;
+        public const int INITIAL_BUDGET = 1500000000;
+
+        public const int TEST_ISOLATION_COST = 550;
+        public const int STAY_AT_HOME_COST = 10;
+        public const int CLOSE_SCHOOL_COST = 10;
+        public const int CLOSE_RECREATIONAL_COST = 10;
+        public const int SHIELDING_COST = 10;
+        public const int MOVEMENT_RESTRICTION_COST = 10;
+        public const int CLOSE_BODER_COST = 10;
+        public const int FURLOUGH_COST = 10;
+        public const int MASK_MANDATE_COST = 1000;
+        public const int HEALTH_DRIVE_COST = 10;
+        public const int SOCIAL_DISTANCEING_COST = 10;
+        public const int CURFEW_COST = 10;
+        
 
 
     }

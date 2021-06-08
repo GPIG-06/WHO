@@ -126,11 +126,12 @@ namespace ConsoleApp1
 
     class WHO
     {
-        int budget = 0;
+        int budget = Constant.INITIAL_BUDGET;
         private uint staticID = 20000;
         List<uint> actionIds = new List<uint>();
         List<GenericAction> actions = new List<GenericAction>();
         List<List<string>> locations = new List<List<string>>();
+        int[] maskType = new int[] { 1 };
         Dictionary<string, uint> locationId = new Dictionary<string, uint>();       
         public WHO(List<List<string>> locations)
         {
@@ -145,7 +146,7 @@ namespace ConsoleApp1
 
         public void TestAndIsolation(uint id, List<string> location, int testQuality, int quarantinePeriod, int quantity, bool symptomaticOnly)
         {
-            if (!actionIds.Contains(id))
+            if (!actionIds.Contains(id) && this.budget >= Constant.TEST_ISOLATION_COST)
             {
                 var testAction = new GenericAction();
                 testAction.id = id;
@@ -160,12 +161,14 @@ namespace ConsoleApp1
                 testAction.parameters.symptomaticOnly = symptomaticOnly;
                 actionIds.Add(id);
                 actions.Add(testAction);
+
+                this.budget -= Constant.TEST_ISOLATION_COST;
             }
         }
 
         public void StayAtHome(uint id, List<string> location)
         {
-            if (!actionIds.Contains(id + 1))
+            if (!actionIds.Contains(id + 1) && this.budget >= Constant.STAY_AT_HOME_COST)
             {
                 var StayAtHome = new GenericAction();
                 StayAtHome.id = id + 1;
@@ -176,12 +179,18 @@ namespace ConsoleApp1
                 StayAtHome.parameters.location = location;
                 actionIds.Add(id + 1);
                 actions.Add(StayAtHome);
+
+                this.budget -= Constant.STAY_AT_HOME_COST;
+            }
+            if(this.budget < Constant.STAY_AT_HOME_COST)
+            {
+                Delete(id + 1);
             }
         }
 
         public void CloseSchool(uint id, List<string> location)
         {
-            if (!actionIds.Contains(id + 2))
+            if (!actionIds.Contains(id + 2) && this.budget >= Constant.CLOSE_SCHOOL_COST)
             {
                 var closeSchool = new GenericAction();
                 closeSchool.id = id + 2;
@@ -192,12 +201,18 @@ namespace ConsoleApp1
                 closeSchool.parameters.location = location;
                 actionIds.Add(id + 2);
                 actions.Add(closeSchool);
+
+                this.budget -= Constant.CLOSE_SCHOOL_COST;
+            }
+            if (this.budget < Constant.CLOSE_SCHOOL_COST)
+            {
+                Delete(id + 2);
             }
         }
 
         public void CloseRecreational(uint id, List<string> location)
         {
-            if (!actionIds.Contains(id + 3))
+            if (!actionIds.Contains(id + 3) && this.budget >= Constant.CLOSE_RECREATIONAL_COST)
             {
                 var closeRecreational = new GenericAction();
                 closeRecreational.id = id + 3;
@@ -208,12 +223,18 @@ namespace ConsoleApp1
                 closeRecreational.parameters.location = location;
                 actionIds.Add(id + 3);
                 actions.Add(closeRecreational);
+
+                this.budget -= Constant.CLOSE_RECREATIONAL_COST;
+            }
+            if (this.budget < Constant.CLOSE_RECREATIONAL_COST)
+            {
+                Delete(id + 3);
             }
         }
 
         public void Shielding(uint id, List<string> location, bool vulnerablePeople, int ageThreshold)
         {
-            if (!actionIds.Contains(id + 4))
+            if (!actionIds.Contains(id + 4) && this.budget >= Constant.SHIELDING_COST)
             {
                 var shielding = new GenericAction();
                 shielding.id = id + 4;
@@ -226,12 +247,18 @@ namespace ConsoleApp1
                 shielding.parameters.ageThreshold = ageThreshold;
                 actionIds.Add(id + 4);
                 actions.Add(shielding);
+
+                this.budget -= Constant.SHIELDING_COST;
+            }
+            if (this.budget < Constant.SHIELDING_COST)
+            {
+                Delete(id + 4);
             }
         }
 
         public void MovementRestriction(uint id, List<string> location, int distance)
         {
-            if (!actionIds.Contains(id + 5))
+            if (!actionIds.Contains(id + 5) && this.budget >= Constant.MOVEMENT_RESTRICTION_COST)
             {
                 var movementRistriction = new GenericAction();
                 movementRistriction.id = id + 5;
@@ -243,12 +270,18 @@ namespace ConsoleApp1
                 movementRistriction.parameters.distance = distance;
                 actionIds.Add(id + 5);
                 actions.Add(movementRistriction);
+
+                this.budget -= Constant.MOVEMENT_RESTRICTION_COST;
+            }
+            if (this.budget < Constant.MOVEMENT_RESTRICTION_COST)
+            {
+                Delete(id + 5);
             }
         }
 
         public void CloseBoder(uint id, List<string> location)
         {
-            if (!actionIds.Contains(id + 6))
+            if (!actionIds.Contains(id + 6) && this.budget >= Constant.CLOSE_BODER_COST)
             {
                 var closeBoder = new GenericAction();
                 closeBoder.id = id + 6;
@@ -259,6 +292,12 @@ namespace ConsoleApp1
                 closeBoder.parameters.location = location;
                 actionIds.Add(id + 6);
                 actions.Add(closeBoder);
+
+                this.budget -= Constant.CLOSE_BODER_COST;
+            }
+            if (this.budget < Constant.CLOSE_BODER_COST)
+            {
+                Delete(id + 6);
             }
         }
 
@@ -299,7 +338,7 @@ namespace ConsoleApp1
 
         public void InformationPress(uint id, List<string> location, int amountInvested)
         {
-            if (!actionIds.Contains(id + 9))
+            if (!actionIds.Contains(id + 9) && this.budget >= Constant.INFO_PRESS_INVEST_HIGH)
             {
                 var infoPress = new GenericAction();
                 infoPress.id = id + 9;
@@ -311,6 +350,11 @@ namespace ConsoleApp1
                 infoPress.parameters.location = location;
                 actionIds.Add(id + 9);
                 actions.Add(infoPress);
+                this.budget -= Constant.INFO_PRESS_INVEST_HIGH;
+            }
+            if (this.budget < Constant.INFO_PRESS_INVEST_HIGH)
+            {
+                Delete(id + 9);
             }
         }
 
@@ -332,7 +376,7 @@ namespace ConsoleApp1
 
         public void MaskMandate(uint id, List<string> location, int[] maskProvisionLevel)
         {
-            if (!actionIds.Contains(id + 11))
+            if (!actionIds.Contains(id + 11) && this.budget >= Constant.MASK_MANDATE_COST)
             {
                 var maskMandate = new GenericAction();
                 maskMandate.id = id + 11;
@@ -344,12 +388,18 @@ namespace ConsoleApp1
                 maskMandate.parameters.maskProvisionLevel = maskProvisionLevel;
                 actionIds.Add(id + 11);
                 actions.Add(maskMandate);
+
+                this.budget -= Constant.MASK_MANDATE_COST;
+            }
+            if (this.budget < Constant.MASK_MANDATE_COST)
+            {
+                Delete(id + 11);
             }
         }
 
         public void HealthDrive(uint id, List<string> location)
         {
-            if (!actionIds.Contains(id + 12))
+            if (!actionIds.Contains(id + 12) && this.budget >= Constant.HEALTH_DRIVE_COST)
             {
                 var healthDrive = new GenericAction();
                 healthDrive.id = id + 12;
@@ -360,6 +410,11 @@ namespace ConsoleApp1
                 healthDrive.parameters.location = location;
                 actionIds.Add(id + 12);
                 actions.Add(healthDrive);
+                this.budget -= Constant.HEALTH_DRIVE_COST;
+            }
+            if (this.budget < Constant.HEALTH_DRIVE_COST)
+            {
+                Delete(id + 12);
             }
         }
 
@@ -381,7 +436,7 @@ namespace ConsoleApp1
 
         public void SocialDistancing(uint id, List<string> location, int distance)
         {
-            if (!actionIds.Contains(id + 14))
+            if (!actionIds.Contains(id + 14) && this.budget >= Constant.SOCIAL_DISTANCEING_COST)
             {
                 var socialDistance = new GenericAction();
                 socialDistance.id = id + 14;
@@ -393,12 +448,18 @@ namespace ConsoleApp1
                 socialDistance.parameters.distance = distance;
                 actionIds.Add(id + 14);
                 actions.Add(socialDistance);
+
+                this.budget -= Constant.SOCIAL_DISTANCEING_COST;
+            }
+            if (this.budget < Constant.SOCIAL_DISTANCEING_COST)
+            {
+                Delete(id + 14);
             }
         }
 
         public void Curfew(uint id, List<string> location)
         {
-            if (!actionIds.Contains(id + 15))
+            if (!actionIds.Contains(id + 15) && this.budget >= Constant.CURFEW_COST)
             {
                 var socialDistance = new GenericAction();
                 socialDistance.id = id + 15;
@@ -409,6 +470,11 @@ namespace ConsoleApp1
                 socialDistance.parameters.location = location;
                 actionIds.Add(id + 15);
                 actions.Add(socialDistance);
+                this.budget -= Constant.CURFEW_COST;
+            }
+            if (this.budget < Constant.CURFEW_COST)
+            {
+                Delete(id + 15);
             }
         }
 
@@ -419,6 +485,7 @@ namespace ConsoleApp1
                 var delete = new GenericAction();
                 delete.id = id;
                 delete.mode = "delete";
+                actions.Add(delete);
                 actionIds.Remove(id);
             }
         }
@@ -527,7 +594,7 @@ namespace ConsoleApp1
         {
             // get SimStatus
             GetSimStatus simStatus = GetSimStatusRequest();
-            this.budget = simStatus.budget;
+            this.budget += simStatus.budget;
             if (simStatus.isWhoTurn)
             {
                 // testing
@@ -618,10 +685,12 @@ namespace ConsoleApp1
                             Delete(id + 6);
                             //delete curfew
                             Delete(id + 15);
-
+                            //delete mask
+                            Delete(id + 11);
                         }
                         else if (Constant.INFECTED_RATE_THRESHOLD_1 <= infectedRate && infectedRate <= Constant.INFECTED_RATE_THRESHOLD_2)
                         {
+                            
                             Shielding(id, element.location, true, 60);
                             
                             SocialDistancing(id, element.location, Constant.RESTRICT_DISTANCE);
@@ -638,11 +707,11 @@ namespace ConsoleApp1
 
                             HealthDrive(id, element.location);
 
+                            MaskMandate(id, element.location,maskType);
                             //delete close boder
                             Delete(id + 6);
                             //delete curfew
                             Delete(id + 15);
-                            
                         }
                         else if(infectedRate >= Constant.INFECTED_RATE_THRESHOLD_2)
                         {
@@ -666,6 +735,7 @@ namespace ConsoleApp1
 
                             HealthDrive(id, element.location);
 
+                            MaskMandate(id, element.location, maskType);
                         }
                     }
                 }
