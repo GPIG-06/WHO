@@ -36,6 +36,7 @@ namespace ConsoleApp1
         public const int HEALTH_DRIVE_COST = 10;
         public const int SOCIAL_DISTANCEING_COST = 10;
         public const int CURFEW_COST = 10;
+        public const int VACCINE_MAND_COST = 10;
         
 
 

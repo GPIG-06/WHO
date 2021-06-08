@@ -83,6 +83,8 @@ namespace ConsoleApp1
         public int turnCount;
         [DataMember]
         public int budget;
+        [DataMember]
+        public bool vacReady;
     }
 
     [DataContract]
@@ -164,6 +166,10 @@ namespace ConsoleApp1
 
                 this.budget -= Constant.TEST_ISOLATION_COST;
             }
+            if(this.budget < Constant.TEST_ISOLATION_COST)
+            {
+                Delete(id);
+            }
         }
 
         public void StayAtHome(uint id, List<string> location)
@@ -217,7 +223,7 @@ namespace ConsoleApp1
                 var closeRecreational = new GenericAction();
                 closeRecreational.id = id + 3;
                 closeRecreational.mode = "create";
-                closeRecreational.action = "closeSchools";
+                closeRecreational.action = "closeRecreationalLocations";
 
                 closeRecreational.parameters = new GenericActionParameters();
                 closeRecreational.parameters.location = location;
@@ -425,7 +431,7 @@ namespace ConsoleApp1
                 var investHealthService = new GenericAction();
                 investHealthService.id = id + 13;
                 investHealthService.mode = "create";
-                investHealthService.action = "investInHealthServices ";
+                investHealthService.action = "investInHealthServices";
 
                 investHealthService.parameters = new GenericActionParameters();
                 investHealthService.parameters.amountInvested = amountInvested;
@@ -441,7 +447,7 @@ namespace ConsoleApp1
                 var socialDistance = new GenericAction();
                 socialDistance.id = id + 14;
                 socialDistance.mode = "create";
-                socialDistance.action = "socialDistancingMandate ";
+                socialDistance.action = "socialDistancingMandate";
 
                 socialDistance.parameters = new GenericActionParameters();
                 socialDistance.parameters.location = location;
@@ -464,7 +470,7 @@ namespace ConsoleApp1
                 var socialDistance = new GenericAction();
                 socialDistance.id = id + 15;
                 socialDistance.mode = "create";
-                socialDistance.action = "curfew ";
+                socialDistance.action = "curfew";
 
                 socialDistance.parameters = new GenericActionParameters();
                 socialDistance.parameters.location = location;
@@ -475,6 +481,28 @@ namespace ConsoleApp1
             if (this.budget < Constant.CURFEW_COST)
             {
                 Delete(id + 15);
+            }
+        }
+
+        public void AdministerVaccine(uint id, List<string> location)
+        {
+            if(!actionIds.Contains(id+16) && this.budget >= Constant.VACCINE_MAND_COST)
+            {
+                var vaccMandate = new GenericAction();
+                vaccMandate.id = id + 16;
+                vaccMandate.mode = "create";
+                vaccMandate.action = "administerVaccine";
+
+                vaccMandate.parameters = new GenericActionParameters();
+                vaccMandate.parameters.location = location;
+                actionIds.Add(id + 16);
+                actions.Add(vaccMandate);
+
+                this.budget -= Constant.VACCINE_MAND_COST;
+            }
+            if(this.budget < Constant.VACCINE_MAND_COST)
+            {
+                Delete(id + 16);
             }
         }
 
@@ -603,12 +631,18 @@ namespace ConsoleApp1
                 {
                     uint id = locationId[String.Join("", location)];
                     TestAndIsolation(id, location, 0, 21, 100, false);
+                    if (simStatus.vacReady)
+                    {
+                        AdministerVaccine(id, location);
+                    }
                 }
                 if (actions.Count > 0)
                 {
                     SendActionRequest();
                     actions.Clear();
                 }
+
+                
                 
 
                 // invest in vaccine
